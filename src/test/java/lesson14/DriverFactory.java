@@ -48,7 +48,7 @@ public class DriverFactory {
         desiredCapabilities.setCapability("appActivity", "com.wdiodemoapp.MainActivity");
 
         androidDriver = new AndroidDriver<>(appiumServer.getUrl(), desiredCapabilities);
-        androidDriver.manage().timeouts().implicitlyWait(30L, TimeUnit.SECONDS);
+        androidDriver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         return androidDriver;
     }
 }
