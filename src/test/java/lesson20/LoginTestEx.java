@@ -1,4 +1,4 @@
-package lesson19;
+package lesson20;
 
 import driver.DriverFactory;
 import io.appium.java_client.MobileElement;
@@ -6,13 +6,14 @@ import io.appium.java_client.android.AndroidDriver;
 import models.components.global.BottomNavComponent;
 import models.pages.LoginPage;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import testdata.LoginCreds;
 
-public class LoginTest {
+public class LoginTestEx {
 
-    @Test
-    public void loginWithCorrectCreds() {
+    @Test(dataProvider = "loginCredsData")
+    public void loginWithCreds(LoginCreds loginCreds) {
         DriverFactory.startAppiumServer();
 
         try{
@@ -24,8 +25,8 @@ public class LoginTest {
             bottomNavComponent.clickLoginLabel();
 
             //fill in login form
-            loginPage.userNameElem().sendKeys("teo@sth.com");
-            loginPage.passElem().sendKeys("87654321");
+            loginPage.userNameElem().sendKeys(loginCreds.getUserName());
+            loginPage.passElem().sendKeys(loginCreds.getPassword());
             loginPage.clickLoginBtn();
 
             //verify success message
@@ -33,19 +34,17 @@ public class LoginTest {
             Assert.assertEquals(actualMessage, "Success", "[ERR] Wrong actual message");
             System.out.println(actualMessage);
 
-        }catch (Exception e){}finally {
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
             DriverFactory.stopAppiumServer();
         }
     }
 
-    @Test (dependsOnMethods = {"a3"})
-    public void a2() {
-        System.out.println("a2");
-    }
-
-    @Test
-    public void a3() {
-        Assert.assertTrue(true);
+    @DataProvider
+    public LoginCreds[] loginCredsData() {
+        String jsonLocation = "/src/test/java/testdata/loginCreds.json";
+        return DataObjectBuilder.buildDataObject(jsonLocation, LoginCreds[].class);
     }
 
 }
